@@ -92,7 +92,6 @@ function savepcd(fname, points, binmode)
             siz = '4 4 4 4';
         case 7
             fields = 'x y z rgba';
-            fields = 'x y z rgb';
             count = '1 1 1 1';
             if ascii
                 typ = 'F F F I';
@@ -127,15 +126,19 @@ function savepcd(fname, points, binmode)
             RGB = uint32(points(4:6,:)*255);
             rgb = (RGB(1,:)*256+RGB(2,:))*256+RGB(3,:);
             
-            points = [ points(1:3,:); double(rgb)];
+            points = [ points(1:3,:); uint32(rgb)];
 
             
         case 7
             % RGBA data
             RGBA = uint32(points(4:7,:)*255);
-            rgba = ((RGBA(1,:)*256+RGBA(2,:))*256+RGBA(3,:))*256+RGBA(4,:);
+            rgba = bitshift(bitand(255, RGBA(1,:)),24)+...
+                   bitshift(bitand(255, RGBA(2,:)),16)+...
+                   bitshift(bitand(255, RGBA(3,:)), 8)+...
+                            bitand(255, RGBA(4,:));
+%\            rgba = ((RGBA(1,:)*256+RGBA(2,:))*256+RGBA(3,:))*256+RGBA(4,:);
             
-            points = [ points(1:3,:); double(rgba)];
+            points = [ points(1:3,:); typecast(rgba, 'single')];
     end
     
     if ascii

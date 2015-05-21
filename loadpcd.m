@@ -228,15 +228,15 @@ function points = loadpcd(fname)
         rgb = typecast(points(4,:), 'uint32');
         switch FIELDS
             case 'x y z rgb'
-                R = double(bitand(255, bitshift(rgb, 16))) /255;
-                G = double(bitand(255, bitshift(rgb, 8))) /255;
+                R = double(bitand(255, bitshift(rgb, -16))) /255;
+                G = double(bitand(255, bitshift(rgb, -8))) /255;
                 B = double(bitand(255, rgb)) /255;
                 points = [points(1:3,:); R; G; B];
                 
             case 'x y z rgba'
-                R = double(bitand(255, bitshift(rgb, 24))) /255;
-                G = double(bitand(255, bitshift(rgb, 16))) /255;
-                B = double(bitand(255, bitshift(rgb, 8))) /255;
+                R = double(bitand(255, bitshift(rgb, -24))) /255;
+                G = double(bitand(255, bitshift(rgb, -16))) /255;
+                B = double(bitand(255, bitshift(rgb, -8))) /255;
                 A = double(bitand(255, rgb)) /255;
                 points = [points(1:3,:); R; G; B; A];
         end
